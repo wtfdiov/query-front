@@ -5,6 +5,7 @@ const location = {
     ocurrencies: 'Occurrencies:',
     inspect: 'Inspect',
     emptyList: `You don't have searchs yet, try typing a keyword in the box above and hitting enter or clicking search.`,
+    close: 'close',
 }
 
 export default location;
