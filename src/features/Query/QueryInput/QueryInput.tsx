@@ -3,8 +3,12 @@ import { Container, Input, Content } from "./QueryInput.styles";
 import location from "location";
 import Button from "components/Button/Button";
 import { create } from "services/crawl.service";
+import { useQuery } from "../Query.context";
+import { QueryStatus } from "interfaces/QueryData";
 
 export default function QueryInput() {
+
+  const { dispatch } = useQuery();
   const [key, setKey] = useState("");
 
   function handleKeyDown(event: KeyboardEvent) {
@@ -19,9 +23,31 @@ export default function QueryInput() {
     setKey(e.currentTarget.value);
   }
 
+  async function performQuery(keyword: string) {
+    return create({ keyword });
+  }
+
+  function validateLength(toValidate: string) {
+    if (toValidate.length < 3) {
+      return false;
+    }
+    return true;
+  }
+
   async function handleSubmit() {
-    const query = await create({keyword: key});
-    console.log(query);
+    if (!validateLength(key)) {
+      return
+    }
+    const query = await performQuery(key);
+    dispatch({
+      type: "add",
+      payload: {
+        id: query.id,
+        status: QueryStatus.New,
+        key,
+        urls: [],
+      },
+    });
     setKey("");
   }
 
